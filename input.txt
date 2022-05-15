@@ -1,0 +1,6 @@
+bn RSHIFT 2 -> bo
+cj OR cp -> cq
+lx -> a
+NOT ax -> ay
+lr AND lt -> lu
+hb LSHIFT 1 -> hv

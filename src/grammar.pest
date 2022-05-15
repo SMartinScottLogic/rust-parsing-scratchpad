@@ -1,0 +1,11 @@
+identifier={ ('a'..'z')+ }
+number={ ('0'..'9')+ }
+op={ ('A'..'Z')+ }
+
+source = {identifier | number}
+
+instruction_sos = { source ~ " " ~ op ~ " " ~ source ~ " -> " ~ identifier }
+instruction_os = { op ~ " " ~ source ~ " -> " ~ identifier }
+instruction_s = { source ~ " -> " ~ identifier }
+
+instruction = { instruction_sos | instruction_os | instruction_s }

@@ -1,0 +1,16 @@
+[package]
+name = "parsing"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# An implementation of regular expressions for Rust.
+regex = "1.5.5"
+# A byte-oriented, zero-copy, parser combinators library
+nom = "7.1.1"
+# The Elegant Parser
+pest = "2.1.3"
+# pest's derive macro
+pest_derive = "2.1.0"
+# Extra iterator adaptors, iterator methods, free functions, and macros.
+itertools = "0.10.3"
