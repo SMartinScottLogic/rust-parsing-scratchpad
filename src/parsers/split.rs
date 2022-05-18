@@ -9,14 +9,14 @@ impl SplitParser {
 }
 
 impl Parser for SplitParser {
-    type Err = std::convert::Infallible;
-
-    fn parse_str(&self, s: &str) -> Result<Instruction, Self::Err> {
+    fn parse_str(&self, s: &str) -> Instruction {
+        log::debug!("parse_str({s})");
         let mut sources = Vec::new();
         let mut op = None;
         let mut target = None;
         let mut expect_target = false;
         for w in s.split_whitespace() {
+            log::trace!("{w}");
             if !expect_target {
                 if Self::is_op(w) {
                     if op.is_some() {
@@ -38,12 +38,9 @@ impl Parser for SplitParser {
             } else {
                 unreachable!()
             }
+            log::debug!("{{sources: {sources:?}, op: {op:?}, target: {target:?}, expect_target: {expect_target}}}");
         }
-        Ok(Instruction::from((
-            &sources,
-            op.unwrap_or_default(),
-            target.unwrap(),
-        )))
+        Instruction::from((&sources, op.unwrap_or_default(), target.unwrap()))
     }
 }
 

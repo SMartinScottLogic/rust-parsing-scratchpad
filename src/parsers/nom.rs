@@ -11,11 +11,9 @@ use crate::{Instruction, Parser};
 pub struct NomParser {}
 
 impl Parser for NomParser {
-    type Err = std::convert::Infallible;
-
-    fn parse_str(&self, s: &str) -> Result<Instruction, Self::Err> {
+    fn parse_str(&self, s: &str) -> Instruction {
         let (_, i) = Self::instruction(s).unwrap();
-        Ok(i)
+        i
     }
 }
 

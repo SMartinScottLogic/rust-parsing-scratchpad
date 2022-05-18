@@ -1,11 +1,23 @@
 use parsing::*;
 
-fn main() {
-    let parser = RegexParser::new();
+fn run(i: i32) -> std::io::Result<Vec<Instruction>> {
+    let filename = "input.txt";
+    match i {
+        0 => load(filename, NomParser::new()),
+        1 => load(filename, PestParser::new()),
+        2 => load(filename, RegexParser::new()),
+        3 => load(filename, SplitParser::new()),
+        _ => unreachable!(),
+    }
+}
 
-    if let Ok(input) = load("input.txt", parser) {
-        for i in &input {
-            println!("{i:?}");
+fn main() {
+    env_logger::init();
+
+    for i in 0..=3 {
+        let input = run(i);
+        if let Ok(input) = input {
+            log::info!("{input:?}");
         }
     }
 }
@@ -27,7 +39,7 @@ mod tests {
             "hb LSHIFT 1 -> hv" => Instruction::LSHIFT("hb".to_string(), "1".to_string(), "hv".to_string())
         ];
         for (input, expected) in tests {
-            assert_eq!(expected, parser.parse_str(input).unwrap());
+            assert_eq!(expected, parser.parse_str(input));
         }
     }
 
@@ -44,7 +56,7 @@ mod tests {
             "hb LSHIFT 1 -> hv" => Instruction::LSHIFT("hb".to_string(), "1".to_string(), "hv".to_string())
         ];
         for (input, expected) in tests {
-            assert_eq!(expected, parser.parse_str(input).unwrap());
+            assert_eq!(expected, parser.parse_str(input));
         }
     }
 
@@ -61,7 +73,7 @@ mod tests {
             "hb LSHIFT 1 -> hv" => Instruction::LSHIFT("hb".to_string(), "1".to_string(), "hv".to_string())
         ];
         for (input, expected) in tests {
-            assert_eq!(expected, parser.parse_str(input).unwrap());
+            assert_eq!(expected, parser.parse_str(input));
         }
     }
 
@@ -78,7 +90,7 @@ mod tests {
             "hb LSHIFT 1 -> hv" => Instruction::LSHIFT("hb".to_string(), "1".to_string(), "hv".to_string())
         ];
         for (input, expected) in tests {
-            assert_eq!(expected, parser.parse_str(input).unwrap());
+            assert_eq!(expected, parser.parse_str(input));
         }
     }
 }

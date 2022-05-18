@@ -23,10 +23,8 @@ macro_rules! map(
      };
 );
 
-pub trait Parser: Sized {
-    type Err;
-
-    fn parse_str(&self, s: &str) -> Result<Instruction, Self::Err>;
+pub trait Parser {
+    fn parse_str(&self, s: &str) -> Instruction;
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -41,7 +39,7 @@ pub enum Instruction {
 
 impl From<(&Vec<&str>, &str, &str)> for Instruction {
     fn from((sources, op, target): (&Vec<&str>, &str, &str)) -> Self {
-        match Operation::from_str(op).unwrap() {
+        let instruction = match Operation::from_str(op).unwrap() {
             Operation::SET => {
                 Instruction::SET(sources.get(0).unwrap().to_string(), target.to_owned())
             }
@@ -68,7 +66,9 @@ impl From<(&Vec<&str>, &str, &str)> for Instruction {
                 sources.get(1).unwrap().to_string(),
                 target.to_owned(),
             ),
-        }
+        };
+        log::debug!("Instruction {instruction:?}");
+        instruction
     }
 }
 
@@ -98,18 +98,14 @@ impl FromStr for Operation {
     }
 }
 
-pub fn load<P: Parser>(filename: &str, parser: P) -> std::io::Result<Vec<Instruction>>
-where
-    <P as Parser>::Err: Debug,
-{
+pub fn load<P: Parser>(filename: &str, parser: P) -> std::io::Result<Vec<Instruction>> {
     let file = File::open(filename)?;
 
     let reader = BufReader::new(file);
     let mut solution = Vec::new();
     for s in reader.lines().flatten() {
-        if let Ok(instruction) = parser.parse_str(&s) {
-            solution.push(instruction);
-        }
+        let instruction = parser.parse_str(&s);
+        solution.push(instruction);
     }
     Ok(solution)
 }

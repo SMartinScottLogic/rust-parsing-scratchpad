@@ -10,14 +10,13 @@ struct InnerParser;
 pub struct PestParser {}
 
 impl crate::Parser for PestParser {
-    type Err = std::convert::Infallible;
-
-    fn parse_str(&self, s: &str) -> Result<Instruction, Self::Err> {
+    fn parse_str(&self, s: &str) -> Instruction {
         let r = InnerParser::parse(Rule::instruction, s)
             .unwrap()
             .next()
             .unwrap();
-        Ok(Self::parse_value(r).0.unwrap())
+        let r = Self::parse_value(r);
+        r.0.unwrap()
     }
 }
 
@@ -51,11 +50,20 @@ impl PestParser {
                     });
                 (d, None)
             }
+            Rule::instruction_s => {
+                let d = pair
+                    .into_inner()
+                    .map(Self::parse_value)
+                    .collect_tuple()
+                    .map(|(source, target)| {
+                        Instruction::from((&vec![source.1.unwrap()], "", target.1.unwrap()))
+                    });
+                (d, None)
+            }
             Rule::identifier => (None, Some(pair.as_str())),
             Rule::source => (None, Some(pair.as_str())),
             Rule::number => (None, Some(pair.as_str())),
             Rule::op => (None, Some(pair.as_str())),
-            _ => unreachable!(),
         }
     }
 

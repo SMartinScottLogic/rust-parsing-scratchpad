@@ -5,9 +5,7 @@ pub struct RegexParser {
 }
 
 impl Parser for RegexParser {
-    type Err = std::convert::Infallible;
-
-    fn parse_str(&self, s: &str) -> Result<Instruction, Self::Err> {
+    fn parse_str(&self, s: &str) -> Instruction {
         let c = self.re.captures(s).unwrap();
         let mut sources = Vec::new();
         if let Some(source) = c.name("source1") {
@@ -19,7 +17,7 @@ impl Parser for RegexParser {
         let op = c.name("op").map(|s| s.as_str()).unwrap_or_default();
         let target = c.name("target").map(|s| s.as_str()).unwrap();
 
-        Instruction::try_from((&sources, op, target))
+        Instruction::try_from((&sources, op, target)).unwrap()
     }
 }
 
