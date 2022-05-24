@@ -3,6 +3,11 @@ name = "parsing"
 version = "0.1.0"
 edition = "2021"
 
+[build-dependencies]
+cfgrammar = "0.12"
+lrlex = "0.12"
+lrpar = "0.12"
+
 [dependencies]
 # A lightweight logging facade for Rust 
 log = "0.4.6"
@@ -10,6 +15,8 @@ log = "0.4.6"
 env_logger = "0.9.0"
 # Extra iterator adaptors, iterator methods, free functions, and macros.
 itertools = "0.10.3"
+# Helpful macros for working with enums and strings
+strum = { version = "0.24", features = ["derive"] }
 
 # An implementation of regular expressions for Rust.
 regex = "1.5.5"
@@ -19,3 +26,7 @@ nom = "7.1.1"
 pest = "2.1.3"
 # pest's derive macro
 pest_derive = "2.1.0"
+# Yacc-compatible parser generator
+cfgrammar = "0.12"
+lrlex = "0.12"
+lrpar = "0.12"

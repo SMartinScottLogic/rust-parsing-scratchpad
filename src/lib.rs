@@ -9,6 +9,7 @@ pub use crate::parsers::NomParser;
 pub use crate::parsers::PestParser;
 pub use crate::parsers::RegexParser;
 pub use crate::parsers::SplitParser;
+pub use crate::parsers::YaccParser;
 
 #[macro_export]
 macro_rules! map(
@@ -29,6 +30,7 @@ pub trait Parser {
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Instruction {
+    Err,
     SET(String, String),
     NOT(String, String),
     AND(String, String, String),
@@ -37,9 +39,9 @@ pub enum Instruction {
     LSHIFT(String, String, String),
 }
 
-impl From<(&Vec<&str>, &str, &str)> for Instruction {
-    fn from((sources, op, target): (&Vec<&str>, &str, &str)) -> Self {
-        let instruction = match Operation::from_str(op).unwrap() {
+impl From<(&Vec<&str>, Operation, &str)> for Instruction {
+    fn from((sources, operation, target): (&Vec<&str>, Operation, &str)) -> Self {
+        let instruction = match operation {
             Operation::SET => {
                 Instruction::SET(sources.get(0).unwrap().to_string(), target.to_owned())
             }
@@ -72,6 +74,13 @@ impl From<(&Vec<&str>, &str, &str)> for Instruction {
     }
 }
 
+impl From<(&Vec<&str>, &str, &str)> for Instruction {
+    fn from((sources, op, target): (&Vec<&str>, &str, &str)) -> Self {
+        let operation = Operation::from_str(op).unwrap();
+        Self::from((sources, operation, target))
+    }
+}
+
 #[derive(Debug)]
 pub enum Operation {
     SET,
@@ -98,7 +107,7 @@ impl FromStr for Operation {
     }
 }
 
-pub fn load<P: Parser>(filename: &str, parser: P) -> std::io::Result<Vec<Instruction>> {
+pub fn load(filename: &str, parser: Box<dyn Parser>) -> std::io::Result<Vec<Instruction>> {
     let file = File::open(filename)?;
 
     let reader = BufReader::new(file);
