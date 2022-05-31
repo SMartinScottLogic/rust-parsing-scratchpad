@@ -5,6 +5,7 @@ use std::str::FromStr;
 
 mod parsers;
 
+pub use crate::parsers::CombineParser;
 pub use crate::parsers::NomParser;
 pub use crate::parsers::PestParser;
 pub use crate::parsers::RegexParser;

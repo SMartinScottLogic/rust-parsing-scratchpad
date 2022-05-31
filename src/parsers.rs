@@ -1,9 +1,11 @@
+mod combine;
 mod nom;
 mod pest;
 mod regex;
 mod split;
 mod yacc;
 
+pub use self::combine::CombineParser;
 pub use self::nom::NomParser;
 pub use self::pest::PestParser;
 pub use self::regex::RegexParser;

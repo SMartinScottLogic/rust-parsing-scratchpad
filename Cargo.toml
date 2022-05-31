@@ -30,3 +30,5 @@ pest_derive = "2.1.0"
 cfgrammar = "0.12"
 lrlex = "0.12"
 lrpar = "0.12"
+# Fast parser combinators on arbitrary streams with zero-copy support.
+combine = "4.6.4"
