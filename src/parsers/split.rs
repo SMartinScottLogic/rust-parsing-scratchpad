@@ -3,6 +3,7 @@ use crate::{Instruction, Parser};
 pub struct SplitParser {}
 
 impl SplitParser {
+    #[must_use]
     pub fn new() -> Self {
         Self {}
     }
@@ -19,9 +20,7 @@ impl Parser for SplitParser {
             log::trace!("{w}");
             if !expect_target {
                 if Self::is_op(w) {
-                    if op.is_some() {
-                        panic!("multiple operators in instruction");
-                    }
+                    assert!(op.is_none(), "multiple operators in instruction");
                     op = Some(w);
                 } else if Self::is_identifier(w) || Self::is_number(w) {
                     sources.push(w);
@@ -29,9 +28,7 @@ impl Parser for SplitParser {
                     expect_target = true;
                 }
             } else if Self::is_identifier(w) {
-                if target.is_some() {
-                    panic!("multiple outputs in instruction");
-                }
+                assert!(target.is_none(), "multiple outputs in instruction");
                 target = Some(w);
             } else if "->" == w {
                 panic!("multiple output designators");
@@ -46,7 +43,7 @@ impl Parser for SplitParser {
 
 impl SplitParser {
     fn is_identifier(s: &str) -> bool {
-        s.chars().all(|c| c.is_lowercase())
+        s.chars().all(char::is_lowercase)
     }
 
     fn is_number(s: &str) -> bool {
@@ -54,7 +51,7 @@ impl SplitParser {
     }
 
     fn is_op(s: &str) -> bool {
-        s.chars().all(|c| c.is_uppercase())
+        s.chars().all(char::is_uppercase)
     }
 }
 

@@ -8,6 +8,7 @@ use crate::Instruction;
 pub struct CombineParser {}
 
 impl CombineParser {
+    #[must_use]
     pub fn new() -> Self {
         Self {}
     }
@@ -46,8 +47,11 @@ impl crate::Parser for CombineParser {
             .map(|(s, _, t)| Instruction::from((&vec![s.as_str()], "", t.as_str())));
         let r: Result<(Instruction, &str), easy::ParseError<&str>> =
             choice((attempt(s), attempt(os), attempt(sos))).easy_parse(source);
-        println!("{source} {r:?}");
-        r.unwrap().0
+        match r {
+            Ok((i, "")) => i,
+            Ok((_, r)) => panic!("Unparsed residue: {r}"),
+            Err(e) => panic!("Parse error: {e:?}"),
+        }
     }
 }
 

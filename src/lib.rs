@@ -44,29 +44,29 @@ impl From<(&Vec<&str>, Operation, &str)> for Instruction {
     fn from((sources, operation, target): (&Vec<&str>, Operation, &str)) -> Self {
         let instruction = match operation {
             Operation::SET => {
-                Instruction::SET(sources.get(0).unwrap().to_string(), target.to_owned())
+                Instruction::SET((*sources.get(0).unwrap()).to_string(), target.to_owned())
             }
             Operation::NOT => {
-                Instruction::NOT(sources.get(0).unwrap().to_string(), target.to_owned())
+                Instruction::NOT((*sources.get(0).unwrap()).to_string(), target.to_owned())
             }
             Operation::OR => Instruction::OR(
-                sources.get(0).unwrap().to_string(),
-                sources.get(1).unwrap().to_string(),
+                (*sources.get(0).unwrap()).to_string(),
+                (*sources.get(1).unwrap()).to_string(),
                 target.to_owned(),
             ),
             Operation::AND => Instruction::AND(
-                sources.get(0).unwrap().to_string(),
-                sources.get(1).unwrap().to_string(),
+                (*sources.get(0).unwrap()).to_string(),
+                (*sources.get(1).unwrap()).to_string(),
                 target.to_owned(),
             ),
             Operation::RSHIFT => Instruction::RSHIFT(
-                sources.get(0).unwrap().to_string(),
-                sources.get(1).unwrap().to_string(),
+                (*sources.get(0).unwrap()).to_string(),
+                (*sources.get(1).unwrap()).to_string(),
                 target.to_owned(),
             ),
             Operation::LSHIFT => Instruction::LSHIFT(
-                sources.get(0).unwrap().to_string(),
-                sources.get(1).unwrap().to_string(),
+                (*sources.get(0).unwrap()).to_string(),
+                (*sources.get(1).unwrap()).to_string(),
                 target.to_owned(),
             ),
         };
@@ -108,7 +108,10 @@ impl FromStr for Operation {
     }
 }
 
-pub fn load(filename: &str, parser: Box<dyn Parser>) -> std::io::Result<Vec<Instruction>> {
+/// # Errors
+///
+/// Will return `Err` if `filename` does not exist, or the user doesn't have access to it.
+pub fn load(filename: &str, parser: &Box<dyn Parser>) -> std::io::Result<Vec<Instruction>> {
     let file = File::open(filename)?;
 
     let reader = BufReader::new(file);

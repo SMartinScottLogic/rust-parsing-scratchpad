@@ -60,13 +60,13 @@ impl PestParser {
                     });
                 (d, None)
             }
-            Rule::identifier => (None, Some(pair.as_str())),
-            Rule::source => (None, Some(pair.as_str())),
-            Rule::number => (None, Some(pair.as_str())),
-            Rule::op => (None, Some(pair.as_str())),
+            Rule::identifier | Rule::source | Rule::number | Rule::op => {
+                (None, Some(pair.as_str()))
+            }
         }
     }
 
+    #[must_use]
     pub fn new() -> Self {
         Self {}
     }

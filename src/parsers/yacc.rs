@@ -17,6 +17,7 @@ pub struct YaccParser {
 }
 
 impl YaccParser {
+    #[must_use]
     pub fn new() -> Self {
         Self {
             lexerdef: calc_l::lexerdef(),
@@ -37,12 +38,11 @@ impl Parser for YaccParser {
         for e in errs {
             println!("{}", e.pp(&lexer, &calc_y::token_epp));
         }
-        match res {
-            Some(r) => r.unwrap(),
-            _ => {
-                eprintln!("Unable to evaluate expression: {s}");
-                Instruction::Err
-            }
+        if let Some(r) = res {
+            r.unwrap()
+        } else {
+            eprintln!("Unable to evaluate expression: {s}");
+            Instruction::Err
         }
     }
 }

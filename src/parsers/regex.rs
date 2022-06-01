@@ -22,6 +22,10 @@ impl Parser for RegexParser {
 }
 
 impl RegexParser {
+    /// # Panics
+    ///
+    /// Will panic if internal regex is invalid
+    #[must_use]
     pub fn new() -> Self {
         let re = regex::Regex::new(r"^(((?P<source1>([0-9]+|[a-z]+)) )?(?P<op>[A-Z]+) )?(?P<source2>([0-9]+|[a-z]+)) -> (?P<target>[a-z]+)$").unwrap();
         Self { re }

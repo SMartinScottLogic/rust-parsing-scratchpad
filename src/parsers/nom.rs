@@ -24,6 +24,7 @@ impl Default for NomParser {
 }
 
 impl NomParser {
+    #[must_use]
     pub fn new() -> Self {
         Self {}
     }

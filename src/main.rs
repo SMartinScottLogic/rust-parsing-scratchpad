@@ -1,4 +1,7 @@
-use parsing::*;
+use parsing::{
+    load, CombineParser, Instruction, NomParser, Parser, PestParser, RegexParser, SplitParser,
+    YaccParser,
+};
 use strum::{EnumIter, IntoEnumIterator};
 
 #[derive(EnumIter, Debug)]
@@ -30,7 +33,7 @@ fn run(parser_type: &ParserType) -> std::io::Result<Vec<Instruction>> {
     let filename = "input.txt";
     let filename = "day7.input";
     let parser = ParserFactory::build(parser_type);
-    load(filename, parser)
+    load(filename, &parser)
 }
 
 fn main() {
